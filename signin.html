@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-In Page</title>
+    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-auth-compat.js"></script>
+    <style>
+
+body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Jost', sans-serif;
+            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+        }
+        .signin-con {
+            background-color: black;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 300px;
+        }
+
+        .signin-body h2 {
+            text-align: center;
+            color: yellow;
+            margin-bottom: 20px;
+        }
+
+        .signin-body label {
+            font-size: 17px;
+            margin-top: 10px;
+            display: block;
+            color: white;
+        }
+
+        .signin-body input {
+            width: 90%;
+            padding: 10px;
+            /* margin: 5px 0 15px; */
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #1a1a2a;
+            color: white;
+        }
+
+        .signin-body input:focus {
+            outline: none;
+            border-color: yellow;
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            margin-bottom: 20px;
+
+        }
+
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+
+        }
+
+        .remember-me label {
+            font-size: 15px;
+        }
+
+        .remember-me input[type="checkbox"] {
+            margin: 0;
+            padding: 0;
+            width: 15px;
+            height: 15px;
+        }
+
+        .options div {
+            font-size: 15px;
+            color: white;
+
+        }
+
+        .options .forgot-password {
+            font-size: 15px;
+            color: yellow;
+            text-decoration: none;
+        }
+
+        .signin-body p {
+            font-size: 14px;
+            color: yellow;
+
+
+            font-weight: bold;
+            color: white;
+            text-align: center;
+
+        }
+
+        .signin-body a {
+            color: yellow;
+            text-decoration: none;
+            text-align: right;
+        }
+
+        .signin-body button {
+            width: 100%;
+            padding: 10px;
+            background-color: yellow;
+            border: none;
+            border-radius: 5px;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .signin-body button:hover {
+            background-color: rgb(184, 184, 37);
+        }
+
+        .input-con {
+            line-height: 60px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="signin-con">
+        <div class="signin-body">
+            <h2>SIGN IN</h2>
+
+            <div class="input-con">
+                <input type="email" id="signin-email" placeholder="E-mail" required>
+                <input type="password" id="signin-password" placeholder="Password" required>
+            </div>
+
+
+            <div class="options">
+                <div class="remember-me">
+                    <input checked type="checkbox" id="remember-me">
+                    <label for="">Remember me</label>
+                </div>
+                <a href="#" class="forgot-password"> Forgot Password?</a>
+            </div>
+
+            <p>Don't have an account? <a href="index.html">Sign Up</a></p>
+            <button type="submit" onclick="submitForm(event)" id="signin-btn">Sign In</button>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAnNsvBE78G6y0cbMMvjn5FIni9MmdrpC4",
+        authDomain: "codexplorer-46fb4.firebaseapp.com",
+        projectId: "codexplorer-46fb4",
+        storageBucket: "codexplorer-46fb4.firebasestorage.app",
+        messagingSenderId: "680874155974",
+        appId: "1:680874155974:web:3c9214e68ba8ff7c99dcc7"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    function submitForm(e) {
+        e.preventDefault()
+        let email = document.getElementById("signin-email").value.trim();
+        let password = document.getElementById("signin-password").value.trim();
+        
+
+        if (!email || !password) {
+            alert("all fields are mandatory")
+            return
+        }
+
+       firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // Signed in
+                var user = userCredential.user;
+                console.log(user);
+                
+                alert("login succeccful")
+                 window.location.href = "dashboard.html"
+
+                // ...
+            })
+            .catch((error) => {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                alert(errorMessage)
+            });
+    }
+
+</script>

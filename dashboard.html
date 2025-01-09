@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-auth-compat.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: blue;
+            color: white;
+            padding: 10px 0px 10px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            flex-wrap: wrap;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: calc(1rem + 1vw);
+        }
+
+        .header .nav-links {
+            display: flex;
+            gap: 15px;
+            margin-right: 25px;
+        }
+
+        .header .nav-links button {
+            background-color: white;
+            border: none;
+            color: blue;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .carousel {
+            /* width: 600px; */
+            background-color: black;
+            border: 5px solid yellow;
+            height: 100vh;
+        }
+
+        .carousel-con {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .upload-con {
+            width: 570px;
+
+            padding: 6px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px;
+            margin: 0 10px;
+            cursor: pointer;
+            background-color: rgb(129, 212, 34);
+            color: white;
+            border-radius: 9px;
+        }
+
+        img {
+            display: none;
+            aspect-ratio: 1 / 0.7;
+            max-width: 400px;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1 id="welcomeUser"></h1>
+        <div class="nav-links">
+            <button id="profileBtn" onclick="goToProfile()">Profile</button>
+            <button id="logoutBtn" onclick="logout()">Log Out</button>
+        </div>
+    </div>
+    <div class="carousel shadow rounded">
+        <div class="upload-con">
+            <input id="input" type="file" accept="image/*" onchange="pickAPicture()">
+        </div>
+        <div>
+            <img id="image" alt="">
+        </div>
+        <div class="carousel-con">
+            <button onclick="addImage()" id="addImageBtn">Add Image</button>
+            <button onclick="prev()" id="prevBtn">Previous</button>
+            <button onclick="next()" id="nextBtn">Next</button>
+            <button onclick="reset()">Reset</button>
+        </div>
+    </div>
+</body>
+
+</html>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAnNsvBE78G6y0cbMMvjn5FIni9MmdrpC4",
+        authDomain: "codexplorer-46fb4.firebaseapp.com",
+        projectId: "codexplorer-46fb4",
+        storageBucket: "codexplorer-46fb4.firebasestorage.app",
+        messagingSenderId: "680874155974",
+        appId: "1:680874155974:web:3c9214e68ba8ff7c99dcc7"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    function logout() {
+        auth.signOut().then(() => {
+            alert("logging out")
+            window.location.href = "signin.html";
+            console.error("Error during logout: ", error);
+        });
+    }
+
+
+    firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        document.getElementById("welcomeUser").innerText = `Welcome, ${user.displayName}`;
+       
+
+        // Reload user to ensure profile is up-to-date
+        user.reload().then(() => {
+            console.log("User object after reload:", user);
+
+            // Check if displayName exists
+           
+        }).catch((error) => {
+            console.error("Error reloading user profile:", error.message);
+        });
+
+        
+        var uid = user.uid;
+        
+    } else {
+        // If no user is signed in
+        alert("You must be signed in to access this page.");
+        window.location.href = "signin.html";
+    }
+});
+
+
+
+</script>
