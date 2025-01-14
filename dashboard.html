@@ -9,10 +9,11 @@
     <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-auth-compat.js"></script>
 
     <style>
-        * {
+        body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            background-color: white;
         }
 
         .header {
@@ -51,42 +52,209 @@
             cursor: pointer;
         }
 
-        .carousel {
-            /* width: 600px; */
-            background-color: black;
-            border: 5px solid yellow;
-            height: 100vh;
+        .form-container {
+            max-width: 600px;
+            margin: 100px auto 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .carousel-con {
-            display: flex;
-            align-items: center;
-            margin-top: 20px;
+        .form-container label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
         }
 
-        .upload-con {
-            width: 570px;
-
-            padding: 6px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-
-        button {
+        .form-container input[type="text"],
+        .form-container textarea,
+        .form-container input[type="file"] {
+            width: 100%;
             padding: 10px;
-            margin: 0 10px;
-            cursor: pointer;
-            background-color: rgb(129, 212, 34);
-            color: white;
-            border-radius: 9px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
 
-        img {
-            display: none;
-            aspect-ratio: 1 / 0.7;
-            max-width: 400px;
-            height: auto;
+        .form-container button {
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
         }
+
+        .blog-preview {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .blog-preview img {
+            width: 100%;
+            /* height: 400px; */
+            /* width: 500px; */
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .blog-preview h2 {
+            margin: 10px 0;
+            font-size: 24px;
+        }
+
+        .blog-preview p {
+            font-size: 16px;
+        }
+
+        .act-btn {
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .liked {
+            background-color: red !important;
+        }
+
+        /* @media screen and (max-width: 768px) {
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: blue;
+                color: white;
+                padding: 10px 0px 10px 20px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000;
+                flex-wrap: wrap;
+            }
+
+
+            .form-container {
+                margin: 120px 10px 50px 10px;
+            }
+
+            .blog-preview {
+                margin: 10px 10px;
+            }
+
+            .act-btn {
+                font-size: 14px;
+                padding: 8px 10px;
+            }
+
+        }
+
+        @media screen and (max-width: 344px) {
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: blue;
+                color: white;
+                padding: 10px 0px 10px 20px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000;
+                flex-wrap: wrap;
+            }
+
+            .header h1 {
+                font-size: 1rem;
+            }
+
+            .header .nav-links {
+
+                margin-right: 25px;
+            }
+
+            .form-container {
+                margin: 100px 5px 50px 5px;
+                padding: 15px;
+            }
+
+            .blog-preview {
+                margin: 15px 5px;
+                padding: 15px;
+            }
+
+            .blog-preview h2 {
+                font-size: 20px;
+            }
+
+            .blog-preview p {
+                font-size: 14px;
+            }
+
+            .act-btn {
+                font-size: 14px;
+                padding: 8px 10px;
+            }
+        }
+
+
+        @media screen and (max-width: 300px) {
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: blue;
+                color: white;
+                padding: 10px 0px 10px 20px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000;
+                flex-wrap: wrap;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+
+
+            .form-container {
+                margin: 100px 5px 50px 5px;
+                padding: 15px;
+            }
+
+            .blog-preview {
+                margin: 15px 5px;
+                padding: 15px;
+            }
+
+            .blog-preview h2 {
+                font-size: 20px;
+            }
+
+            .blog-preview p {
+                font-size: 14px;
+            }
+
+            .act-btn {
+                font-size: 14px;
+                padding: 8px 10px;
+            }
+        } */
     </style>
 </head>
 
@@ -94,25 +262,35 @@
     <div class="header">
         <h1 id="welcomeUser"></h1>
         <div class="nav-links">
-            <button id="profileBtn" onclick="goToProfile()">Profile</button>
+            <!-- <button id="profileBtn" onclick="goToProfile()">Profile</button> -->
             <button id="logoutBtn" onclick="logout()">Log Out</button>
         </div>
     </div>
-    <div class="carousel shadow rounded">
-        <div class="upload-con">
-            <input id="input" type="file" accept="image/*" onchange="pickAPicture()">
-        </div>
-        <div>
-            <img id="image" alt="">
-        </div>
-        <div class="carousel-con">
-            <button onclick="addImage()" id="addImageBtn">Add Image</button>
-            <button onclick="prev()" id="prevBtn">Previous</button>
-            <button onclick="next()" id="nextBtn">Next</button>
-            <button onclick="reset()">Reset</button>
-        </div>
+
+    <div class="form-container">
+        <label for="title">Title</label>
+        <input type="text" id="title" placeholder="Enter title">
+
+        <label for="description">Description</label>
+        <textarea id="description" placeholder="Enter description"></textarea>
+
+        <label for="image">Image</label>
+        <input id="image" type="file" accept="image/*">
+
+        <button onclick="postBlog()" id="postBlog">Post Blog</button>
+    </div>
+
+    <div id="blogPreview" class="blog-preview" style="display: block;">
+        <img id="previewImage" src="" alt="Blog Image">
+        <h2 id="previewTitle"></h2>
+        <p id="previewDescription"></p>
+        <button onclick="prev()" class="act-btn" id="prevBtn">Previous</button>
+        <button onclick="next()" class="act-btn" id="nextBtn">Next</button>
+        <button onclick="like()" class="act-btn" id="likeBtn">Like</button>
+        <button onclick="reset()" class="act-btn" id="resetBtn">Reset</button>
     </div>
 </body>
+
 
 </html>
 <script>
@@ -129,40 +307,61 @@
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
+    function submitForm(e) {
+        e.preventDefault()
+        let email = document.getElementById("signin-email").value.trim();
+        let password = document.getElementById("signin-password").value.trim();
+        
+
+        if (!email || !password) {
+            alert("all fields are mandatory")
+            return
+        }
+
+       firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // Signed in
+                var user = userCredential.user;
+                console.log(user);
+                
+                alert("login succeccful")
+                 window.location.href = "dashboard.html"
+
+                // ...
+            })
+            .catch((error) => {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                alert(errorMessage)
+            });
+    }
+
     function logout() {
         auth.signOut().then(() => {
             alert("logging out")
             window.location.href = "signin.html";
+        }).catch((error) => {
             console.error("Error during logout: ", error);
         });
     }
 
 
     firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-        document.getElementById("welcomeUser").innerText = `Welcome, ${user.displayName}`;
-       
+        if (user) {
+            document.getElementById("welcomeUser").innerText = `Welcome, ${user.displayName}`;
 
-        // Reload user to ensure profile is up-to-date
-        user.reload().then(() => {
-            console.log("User object after reload:", user);
+            // Reload user to ensure profile is up-to-date
+            user.reload().then(() => {
+                console.log("User object after reload:", user);
+            }).catch((error) => {
+                console.error("Error reloading user profile:", error.message);
+            });
 
-            // Check if displayName exists
-           
-        }).catch((error) => {
-            console.error("Error reloading user profile:", error.message);
-        });
-
-        
-        var uid = user.uid;
-        
-    } else {
-        // If no user is signed in
-        alert("You must be signed in to access this page.");
-        window.location.href = "signin.html";
-    }
-});
-
-
-
+            var uid = user.uid;
+        } else {
+            // If no user is signed in
+            // alert("You must be signed in to access this page.");
+            window.location.href = "signin.html";
+        }
+    });
 </script>

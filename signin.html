@@ -8,17 +8,27 @@
     <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-auth-compat.js"></script>
     <style>
-
-body {
+        body {
             margin: 0;
             padding: 0;
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            font-family: 'Jost', sans-serif;
-            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+            text-align: center;
         }
+
+        .background-vid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
         .signin-con {
             background-color: black;
             border-radius: 8px;
@@ -43,7 +53,6 @@ body {
         .signin-body input {
             width: 90%;
             padding: 10px;
-            /* margin: 5px 0 15px; */
             border: 1px solid #444;
             border-radius: 5px;
             background-color: #1a1a2a;
@@ -61,15 +70,12 @@ body {
             align-items: center;
             margin-top: 15px;
             margin-bottom: 20px;
-
         }
-
 
         .remember-me {
             display: flex;
             align-items: center;
             gap: 5px;
-
         }
 
         .remember-me label {
@@ -86,7 +92,6 @@ body {
         .options div {
             font-size: 15px;
             color: white;
-
         }
 
         .options .forgot-password {
@@ -97,19 +102,14 @@ body {
 
         .signin-body p {
             font-size: 14px;
-            color: yellow;
-
-
             font-weight: bold;
             color: white;
             text-align: center;
-
         }
 
         .signin-body a {
             color: yellow;
             text-decoration: none;
-            text-align: right;
         }
 
         .signin-body button {
@@ -131,26 +131,39 @@ body {
         .input-con {
             line-height: 60px;
         }
+
+        .show-password {
+            cursor: pointer;
+            color: yellow;
+            font-size: 12px;
+            position: absolute;
+            top: 50%;
+            right: 10%;
+            transform: translateY(-50%);
+        }
     </style>
 </head>
 
 <body>
+    <video class="background-vid" src="birdd.mp4" autoplay muted loop></video>
     <div class="signin-con">
         <div class="signin-body">
             <h2>SIGN IN</h2>
 
             <div class="input-con">
                 <input type="email" id="signin-email" placeholder="E-mail" required>
-                <input type="password" id="signin-password" placeholder="Password" required>
             </div>
-
+            <div class="input-con" style="position: relative;">
+                <input type="password" id="signin-password" placeholder="Password" required>
+                <span class="show-password" onclick="showPass('signin-password', this)">Show</span>
+            </div>
 
             <div class="options">
                 <div class="remember-me">
                     <input checked type="checkbox" id="remember-me">
-                    <label for="">Remember me</label>
+                    <label for="remember-me">Remember me</label>
                 </div>
-                <a href="#" class="forgot-password"> Forgot Password?</a>
+                <a href="#" onclick="forgotPassword()" class="forgot-password">Forgot Password?</a>
             </div>
 
             <p>Don't have an account? <a href="index.html">Sign Up</a></p>
@@ -158,8 +171,6 @@ body {
         </div>
     </div>
 </body>
-
-</html>
 
 <script>
     const firebaseConfig = {
@@ -175,33 +186,63 @@ body {
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
+    function showPass(inputId, toggleElement) {
+        const inputField = document.getElementById(inputId);
+        if (inputField.type === "password") {
+            inputField.type = "text";
+            toggleElement.textContent = "Hide";
+        } else {
+            inputField.type = "password";
+            toggleElement.textContent = "Show";
+        }
+    }
+
     function submitForm(e) {
-        e.preventDefault()
+        e.preventDefault();
         let email = document.getElementById("signin-email").value.trim();
         let password = document.getElementById("signin-password").value.trim();
-        
 
         if (!email || !password) {
-            alert("all fields are mandatory")
-            return
+            alert("All fields are mandatory");
+            return;
         }
 
-       firebase.auth().signInWithEmailAndPassword(email, password)
+        firebase.auth().signInWithEmailAndPassword(email, password)
             .then((userCredential) => {
                 // Signed in
                 var user = userCredential.user;
                 console.log(user);
-                
-                alert("login succeccful")
-                 window.location.href = "dashboard.html"
 
-                // ...
+                if (!user.emailVerified) {
+                    alert("Please verify your email before signing in.");
+                    return;
+                }
+
+                alert("Login successful");
+                window.location.href = "dashboard.html";
+
             })
             .catch((error) => {
-                var errorCode = error.code;
                 var errorMessage = error.message;
-                alert(errorMessage)
+                alert(errorMessage);
             });
     }
 
+    function forgotPassword() {
+        let email = document.getElementById("signin-email").value.trim();
+
+        if (!email) {
+            alert("Please enter your email to reset the password");
+            return;
+        }
+
+        firebase.auth().sendPasswordResetEmail(email)
+            .then(() => {
+                alert("Password reset email sent! Check your inbox.");
+            })
+            .catch((error) => {
+                var errorMessage = error.message;
+                alert(errorMessage);
+            });
+    }
 </script>
