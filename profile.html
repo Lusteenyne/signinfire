@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-storage-compat.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: blue;
+            color: white;
+            padding: 10px 0px 10px 5px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            flex-wrap: wrap;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: calc(1rem + 1vw);
+        }
+
+        .header .nav-links {
+            display: flex;
+            gap: 15px;
+            margin-right: 40px;
+        }
+
+        .header .nav-links button {
+            background-color: white;
+            border: none;
+            color: blue;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .header .nav-links button:hover {
+            background-color: white;
+        }
+
+        .profile-container {
+            background: white;
+            padding: 20px;
+            margin-top: 80px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            height: auto;
+        }
+
+        .profile-container img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 100px auto 50px auto;
+        }
+
+        .profile-container h3 {
+            margin: 20px 0;
+            font-size: 18px;
+        }
+
+        .profile-container p {
+            margin: 15px 0;
+            font-size: 18px;
+            color: rgb(5, 5, 5);
+            overflow: hidden;
+            word-wrap: break-word;
+            text-align: center;
+        }
+
+        .upload-container {
+            margin-bottom: 15px;
+        }
+
+        .upload-container input {
+            display: none;
+        }
+
+        .upload-container label {
+            background-color: blue;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .upload-container label:hover {
+            background-color: darkblue;
+        }
+
+        .updatebtn {
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .update input[type="text"]{
+            width: 50%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        @media screen and (max-width: 1024px) {
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: blue;
+                color: white;
+                padding: 10px 0px 10px 5px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000;
+                flex-wrap: wrap;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .header .nav-links {
+                gap: 15px;
+                margin-right: 40px;
+            }
+
+            .profile-container {
+                margin-top: 100px;
+                padding: 15px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: blue;
+                color: white;
+                padding: 10px 0px 10px 10px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000;
+                flex-wrap: wrap;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .header .nav-links {
+
+                margin-right: 40px;
+            }
+
+
+
+            .profile-container {
+                margin-top: 120px;
+                padding: 10px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: blue;
+                color: white;
+                padding: 10px 0px 10px 10px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000;
+                flex-wrap: wrap;
+            }
+
+            .header h1 {
+                font-size: 1.2rem;
+                /* margin-bottom: 10px; */
+            }
+
+            .header .nav-links {
+
+                margin-right: 40px;
+            }
+
+
+
+            .profile-container {
+                margin-top: 150px;
+                /* padding: 5px; */
+            }
+        }
+
+        @media screen and (max-width: 412px) {
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: blue;
+                color: white;
+                padding: 10px 0px 10px 10px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000;
+                flex-wrap: wrap;
+            }
+
+            .header h1 {
+                font-size: 1.2rem;
+                /* margin-bottom: 10px; */
+            }
+
+            .header .nav-links {
+
+                margin-right: 40px;
+            }
+
+
+
+            .profile-container {
+                margin-top: 150px;
+                /* padding: 5px; */
+            }
+        }
+
+
+        @media screen and (max-width: 375px) {
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: blue;
+                color: white;
+                padding: 10px 0px 10px 10px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000;
+                flex-wrap: wrap;
+            }
+
+            .header h1 {
+                font-size: 1rem;
+            }
+
+            /* .header .nav-links button {
+                font-size: 0.8rem;
+                margin-right: 40px;
+            
+            }
+     */
+            .profile-container {
+                margin-top: 180px;
+            }
+        }
+
+        @media screen and (max-width: 344px) {
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: blue;
+                color: white;
+                /* padding: 10px 0px 10px 5px; */
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000;
+                flex-wrap: wrap;
+            }
+
+            .header h1 {
+                font-size: 1rem;
+            }
+
+            .header .nav-links button {
+                font-size: 0.8rem;
+                margin-right: -10px;
+
+            }
+
+            .profile-container {
+                margin-top: 180px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="header">
+        <h1 id="welcomeUser"></h1>
+        <div class="nav-links">
+            <button id="dashboardBtn" onclick="goToDashboard()">Dashboard</button>
+            <button id="logoutBtn" onclick="logout()">Log Out</button>
+        </div>
+    </div>
+
+    <div class="profile-container">
+        <div class="upload-container">
+            <label for="profileImage">Select a profile image</label>
+            <input type="file" id="profileImage" accept="image/*" onchange="uploadImage(event)">
+        </div>
+        <img id="profilePic" src="no image.jpg" alt="Profile Picture">
+        <h3 id="userEmail">Email: Loading...</h3>
+        <div class="update">
+            <input type="text" id="input1" placeholder="Enter new username">
+            <button class="updatebtn" onclick="updateUsername()">Update Username</button>
+            <input type="text" id="input2" placeholder="Enter new password">
+            <button class="updatebtn" onclick="updatePassword()">Update Password</button>
+        </div>
+    </div>
+
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyAnNsvBE78G6y0cbMMvjn5FIni9MmdrpC4",
+            authDomain: "codexplorer-46fb4.firebaseapp.com",
+            projectId: "codexplorer-46fb4",
+            storageBucket: "codexplorer-46fb4.appspot.com",
+            messagingSenderId: "680874155974",
+            appId: "1:680874155974:web:3c9214e68ba8ff7c99dcc7"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        var auth = firebase.auth();
+        var storage = firebase.storage();
+
+        function goToDashboard() {
+            let dashboardBtn = document.getElementById('dashboardBtn');
+            dashboardBtn.innerHTML = "Loading...";
+            dashboardBtn.disabled = true;
+
+            setTimeout(() => {
+                alert('Redirecting to dashboard...');
+                window.location.href = 'dashboard.html';
+                dashboardBtn.innerHTML = "Dashboard";
+                dashboardBtn.disabled = false;
+            }, 3000);
+        }
+
+        function logout() {
+            auth.signOut().then(() => {
+                alert("Logging out...");
+                window.location.href = "signin.html";
+            }).catch((error) => {
+                console.error("Error during logout: ", error);
+            });
+        }
+
+        function checkUser() {
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    document.getElementById("welcomeUser").innerText = `Welcome, ${user.displayName || "User"}`;
+                    document.getElementById("profilePic").src = user.photoURL || "no image.jpg";
+                    document.getElementById("userEmail").innerText = `Email: ${user.email}`;
+                    document.getElementById("input1").value = user.displayName || "";
+                } else {
+                    window.location.href = "signin.html";
+                }
+            });
+        }
+
+        function uploadImage(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                alert("No file selected.");
+                return;
+            }
+
+           
+        function updateUsername() {
+            const newUsername = document.getElementById("input1").value.trim();
+            if (!newUsername) {
+                alert("Username cannot be empty.");
+                return;
+            }
+
+            const user = auth.currentUser;
+            user.updateProfile({ displayName: newUsername }).then(() => {
+                alert("Username updated successfully.");
+                checkUser();
+            }).catch((error) => {
+                alert("Error updating username: " + error.message);
+            });
+        }
+
+        function updatePassword() {
+            const newPassword = document.getElementById("input2").value.trim();
+            if (!newPassword) {
+                alert("Password cannot be empty.");
+                return;
+            }
+
+            const user = auth.currentUser;
+            user.updatePassword(newPassword).then(() => {
+                alert("Password updated successfully.");
+                document.getElementById("input2").value = "";
+            }).catch((error) => {
+                alert("Error updating password: " + error.message);
+            });
+        }
+
+        window.onload = checkUser;
+    </script>
+
+</body>
+
+</html>

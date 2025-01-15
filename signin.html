@@ -177,7 +177,7 @@
         apiKey: "AIzaSyAnNsvBE78G6y0cbMMvjn5FIni9MmdrpC4",
         authDomain: "codexplorer-46fb4.firebaseapp.com",
         projectId: "codexplorer-46fb4",
-        storageBucket: "codexplorer-46fb4.firebasestorage.app",
+        storageBucket: "codexplorer-46fb4.appspot.com",
         messagingSenderId: "680874155974",
         appId: "1:680874155974:web:3c9214e68ba8ff7c99dcc7"
     };
@@ -207,24 +207,27 @@
             return;
         }
 
-        firebase.auth().signInWithEmailAndPassword(email, password)
+        auth.signInWithEmailAndPassword(email, password)
             .then((userCredential) => {
-                // Signed in
-                var user = userCredential.user;
-                console.log(user);
+                const user = userCredential.user;
 
                 if (!user.emailVerified) {
                     alert("Please verify your email before signing in.");
-                    return;
+
+                    user.sendEmailVerification()
+                        .then(() => {
+                            alert("Verification email sent again. Please check your inbox.");
+                        })
+                        .catch((error) => {
+                            console.error("Error sending email verification: ", error);
+                        });
+                } else {
+                    alert("Login successful");
+                    window.location.href = "dashboard.html";
                 }
-
-                alert("Login successful");
-                window.location.href = "dashboard.html";
-
             })
             .catch((error) => {
-                var errorMessage = error.message;
-                alert(errorMessage);
+                alert(error.message);
             });
     }
 
@@ -236,13 +239,12 @@
             return;
         }
 
-        firebase.auth().sendPasswordResetEmail(email)
+        auth.sendPasswordResetEmail(email)
             .then(() => {
                 alert("Password reset email sent! Check your inbox.");
             })
             .catch((error) => {
-                var errorMessage = error.message;
-                alert(errorMessage);
+                alert(error.message);
             });
     }
 </script>

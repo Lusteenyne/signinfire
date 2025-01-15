@@ -262,7 +262,7 @@
     <div class="header">
         <h1 id="welcomeUser"></h1>
         <div class="nav-links">
-            <!-- <button id="profileBtn" onclick="goToProfile()">Profile</button> -->
+            <button id="profileBtn" onclick="goToProfile()">Profile</button>
             <button id="logoutBtn" onclick="logout()">Log Out</button>
         </div>
     </div>
@@ -307,33 +307,47 @@
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    function submitForm(e) {
-        e.preventDefault()
-        let email = document.getElementById("signin-email").value.trim();
-        let password = document.getElementById("signin-password").value.trim();
-        
+    // function submitForm(e) {
+    //     e.preventDefault()
+    //     let email = document.getElementById("signin-email").value.trim();
+    //     let password = document.getElementById("signin-password").value.trim();
 
-        if (!email || !password) {
-            alert("all fields are mandatory")
-            return
-        }
 
-       firebase.auth().signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                // Signed in
-                var user = userCredential.user;
-                console.log(user);
-                
-                alert("login succeccful")
-                 window.location.href = "dashboard.html"
+    //     if (!email || !password) {
+    //         alert("all fields are mandatory")
+    //         return
+    //     }
 
-                // ...
-            })
-            .catch((error) => {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                alert(errorMessage)
-            });
+    //     firebase.auth().signInWithEmailAndPassword(email, password)
+    //         .then((userCredential) => {
+    //             // Signed in
+    //             var user = userCredential.user;
+    //             console.log(user);
+
+    //             alert("login succeccful")
+    //             window.location.href = "dashboard.html"
+
+    //             // ...
+    //         })
+    //         .catch((error) => {
+    //             var errorCode = error.code;
+    //             var errorMessage = error.message;
+    //             alert(errorMessage)
+    //         });
+    // }
+
+
+
+    function goToProfile() {
+        profileBtn.innerHTML = "Loading...";
+        profileBtn.disabled = true;
+
+        setTimeout(() => {
+            alert('Redirecting to profile...');
+            window.location.href = 'profile.html';
+            profileBtn.innerHTML = "Profile";
+            profileBtn.disabled = false;
+        }, 3000);
     }
 
     function logout() {
