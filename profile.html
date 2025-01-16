@@ -393,7 +393,7 @@
 
         function checkUser() {
             firebase.auth().onAuthStateChanged((user) => {
-                if (user) {
+                if (user && user.emailVerified) {
                     document.getElementById("welcomeUser").innerText = `Welcome, ${user.displayName || "User"}`;
                     document.getElementById("profilePic").src = user.photoURL || "no image.jpg";
                     document.getElementById("userEmail").innerText = `Email: ${user.email}`;

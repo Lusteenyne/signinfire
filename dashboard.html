@@ -7,6 +7,7 @@
     <title>Dashboard</title>
     <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-database-compat.js"></script>
 
     <style>
         body {
@@ -52,83 +53,8 @@
             cursor: pointer;
         }
 
-        .form-container {
-            max-width: 600px;
-            margin: 100px auto 50px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
 
-        .form-container label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .form-container input[type="text"],
-        .form-container textarea,
-        .form-container input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .form-container button {
-            background-color: blue;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .blog-preview {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .blog-preview img {
-            width: 100%;
-            /* height: 400px; */
-            /* width: 500px; */
-            height: auto;
-            border-radius: 8px;
-        }
-
-        .blog-preview h2 {
-            margin: 10px 0;
-            font-size: 24px;
-        }
-
-        .blog-preview p {
-            font-size: 16px;
-        }
-
-        .act-btn {
-            background-color: blue;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            margin: 5px;
-        }
-
-        .liked {
-            background-color: red !important;
-        }
-
-        /* @media screen and (max-width: 768px) {
+        @media screen and (max-width: 768px) {
             .header {
                 display: flex;
                 justify-content: space-between;
@@ -254,10 +180,185 @@
                 font-size: 14px;
                 padding: 8px 10px;
             }
-        } */
+        }
+        @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
+        :root {
+            --background-color: #e8f0f7;
+            --header-color: #4a90e2;
+            --send-color: #d1e7fd;
+            --received-color: #f7f7f7;
+            --blocked-color: #ffd1d1;
+            --light-gray: #e0e0e0;
+            --dark-gray: #757575;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Roboto", sans-serif;
+            background-color: var(--background-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            
+        }
+
+        .main-container {
+            margin-top: 50px;
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            height: calc(100vh - 140px); /* Adjust height to account for fixed header */
+            display: flex;
+            flex-direction: column;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .head-container {
+            background-color: var(--header-color);
+            color: #ffffff;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .head-container h1 {
+            font-size: 1.2rem;
+            margin-left: 10px;
+        }
+
+        .head-container img {
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+        }
+
+        .message-container {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            
+            background-color: white;
+            
+          
+            
+        }
+
+        .message-container div {
+            display: flex;
+            flex-direction: column;
+            max-width: 70%;
+        }
+        .message-container p {
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+        .message-container .sent {
+            align-self: flex-end;
+            text-align: right;
+          
+        }
+
+        .message-container .received {
+            align-self: flex-start;
+            text-align: left;
+        }
+
+        .message-container .blocked {
+            align-self: center;
+            text-align: center;
+            max-width: 90%;
+        }
+
+        .message-container p {
+            padding: 10px;
+            border-radius: 8px;
+            margin: 0;
+        }
+
+        .sent p {
+            background-color: var(--send-color);
+        }
+
+        .received p {
+            background-color: var(--received-color);
+        }
+
+        .blocked p {
+            background-color: var(--blocked-color);
+        }
+
+        .message-container .hour {
+            font-size: 0.8rem;
+            color: black;
+            margin-top: 5px;
+        }
+
+        .input-container {
+            display: flex;
+            padding: 10px;
+            background-color: yellow;
+        }
+
+        .input-container input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+            font-size: 1rem;
+            box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-container a {
+            margin-left: 10px;
+            background-color: var(--header-color);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .input-container a:hover {
+            background-color: #3a7bc4;
+        }
+        
+    .delete-btn {
+        background-color: #ff4d4d;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 2px 5px;
+        cursor: pointer;
+        font-size: 10px;
+        width: 20px;
+        height: 20px;
+        transition: background-color 0.3s ease;
+    }
+
+    .delete-btn:hover {
+        background-color: #ff1a1a;
+    }
     </style>
 </head>
-
 <body>
     <div class="header">
         <h1 id="welcomeUser"></h1>
@@ -266,37 +367,55 @@
             <button id="logoutBtn" onclick="logout()">Log Out</button>
         </div>
     </div>
+    <div class="main-container">
+        <div class="head-container">
+            <h1>• BadMan Chat</h1>
+            <a href="#" class="btn"><img src="icon bad.webp" alt="close" class="delete" /></a>
+        </div>
 
-    <div class="form-container">
-        <label for="title">Title</label>
-        <input type="text" id="title" placeholder="Enter title">
+        <div id="messages"  class="message-container"  > 
 
-        <label for="description">Description</label>
-        <textarea id="description" placeholder="Enter description"></textarea>
+             <!-- <div class="sent">
+                <h5 class="hour"></h5>
+                <p class="sent-bubble">
+                 
+                </p>
+              </div>
+              <div class="received">
+                <h5 class="hour"></h5>
+                <p class="received-bubble">
+                  
+                </p>
+              </div>
+              <div class="sent">
+                <h5 class="hour"></h5>
+                <p class="sent-bubble"></p>
+              </div>
+              <div class="blocked">
+                <h5 class="hour">11:05</h5>
+                <p class="blocked-bubble">You were blocked by the user</p>
+              </div>  -->
 
-        <label for="image">Image</label>
-        <input id="image" type="file" accept="image/*">
+        </div>
 
-        <button onclick="postBlog()" id="postBlog">Post Blog</button>
-    </div>
-
-    <div id="blogPreview" class="blog-preview" style="display: block;">
-        <img id="previewImage" src="" alt="Blog Image">
-        <h2 id="previewTitle"></h2>
-        <p id="previewDescription"></p>
-        <button onclick="prev()" class="act-btn" id="prevBtn">Previous</button>
-        <button onclick="next()" class="act-btn" id="nextBtn">Next</button>
-        <button onclick="like()" class="act-btn" id="likeBtn">Like</button>
-        <button onclick="reset()" class="act-btn" id="resetBtn">Reset</button>
+        <div class="input-container">
+            <input type="text" id="myInput" placeholder="Enter your message" />
+            <a href="#" class="btn" onclick="sendMessage()">Send</a>
+        </div>
     </div>
 </body>
 
 
+
+
 </html>
 <script>
+   
+    
     const firebaseConfig = {
         apiKey: "AIzaSyAnNsvBE78G6y0cbMMvjn5FIni9MmdrpC4",
         authDomain: "codexplorer-46fb4.firebaseapp.com",
+        databaseURL: "https://codexplorer-46fb4-default-rtdb.firebaseio.com",
         projectId: "codexplorer-46fb4",
         storageBucket: "codexplorer-46fb4.firebasestorage.app",
         messagingSenderId: "680874155974",
@@ -306,36 +425,9 @@
     // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-
-    // function submitForm(e) {
-    //     e.preventDefault()
-    //     let email = document.getElementById("signin-email").value.trim();
-    //     let password = document.getElementById("signin-password").value.trim();
-
-
-    //     if (!email || !password) {
-    //         alert("all fields are mandatory")
-    //         return
-    //     }
-
-    //     firebase.auth().signInWithEmailAndPassword(email, password)
-    //         .then((userCredential) => {
-    //             // Signed in
-    //             var user = userCredential.user;
-    //             console.log(user);
-
-    //             alert("login succeccful")
-    //             window.location.href = "dashboard.html"
-
-    //             // ...
-    //         })
-    //         .catch((error) => {
-    //             var errorCode = error.code;
-    //             var errorMessage = error.message;
-    //             alert(errorMessage)
-    //         });
-    // }
-
+    // Initialize Realtime Database and get a reference to the service
+    const database = firebase.database();
+    let index = 0;
 
 
     function goToProfile() {
@@ -378,4 +470,66 @@
             window.location.href = "signin.html";
         }
     });
+
+
+    function sendMessage() {
+        if (!myInput.value.trim()) {
+            alert("Please enter a message");
+        } else {
+           
+            firebase.database().ref(`chats/${index}`).set({
+                sender: auth.currentUser.displayName,
+                message: myInput.value.trim(),
+                time: new Date().toLocaleDateString(),
+                
+
+            }).then(() => {
+                
+                alert("Message sent successfully");
+                myInput.value = "";
+            }).catch((error) => {
+                console.error("Error sending message: ", error.message);
+            });
+        }
+    }
+
+    function displayMessages() {
+        var starCountRef = firebase.database().ref("chats");
+       
+        starCountRef.on('value', (snapshot) => {
+            const data = snapshot.val() || [];
+            console.log(data);
+            index = Object.keys(data).length;
+            messages.innerHTML = "";
+            data.forEach((obj, i, arr) => {
+
+            let designClass = auth.currentUser.displayName === obj.sender ? "sent" : "received";
+                messages.innerHTML += `
+                    <div class="${designClass}">
+                         <b style="font-weight: bold;">${obj.sender}</b>
+                        <h5 class="hour">${obj.time}</h5>
+                         
+                        <p class="${designClass}-bubble">${obj.message}</p>  
+                        <button class="delete-btn" onclick="deleteMessage('${i}')">x</button>
+                    </div>
+                     
+                    `
+            });
+            console.log(data);
+        });
+
+    }
+    displayMessages();
+
+    function deleteMessage(index) {
+        database.ref(`chats/${index}`).remove()
+            .then(() => {
+                alert("Message deleted successfully");
+            })
+            .catch((error) => {
+                console.error("Error deleting message: ", error.message);
+            });
+    }
+
+
 </script>
