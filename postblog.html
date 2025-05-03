@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-storage-compat.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: blue;
+            color: white;
+            padding: 10px 0px 10px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            flex-wrap: wrap;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: calc(1rem + 1vw);
+        }
+
+        .header .nav-links {
+            display: flex;
+            gap: 15px;
+            margin-right: 25px;
+        }
+
+        .header .nav-links button {
+            background-color: white;
+            border: none;
+            color: blue;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 100px auto 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-container label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .form-container input[type="text"],
+        .form-container textarea,
+        .form-container input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .form-container button {
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .blog-preview {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .blog-preview img {
+            width: 100%;
+            /* height: 400px; */
+            /* width: 500px; */
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .blog-preview h2 {
+            margin: 10px 0;
+            font-size: 24px;
+        }
+
+        .blog-preview p {
+            font-size: 16px;
+        }
+
+        .act-btn {
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .liked {
+            background-color: red !important;
+        }
+
+        @media screen and (max-width: 768px) {
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: blue;
+                color: white;
+                padding: 10px 0px 10px 20px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000;
+                flex-wrap: wrap;
+            }
+
+
+            .form-container {
+                margin: 120px 10px 50px 10px;
+            }
+
+            .blog-preview {
+                margin: 10px 10px;
+            }
+
+            .act-btn {
+                font-size: 14px;
+                padding: 8px 10px;
+            }
+
+        }
+
+        @media screen and (max-width: 344px) {
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: blue;
+                color: white;
+                padding: 10px 0px 10px 20px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000;
+                flex-wrap: wrap;
+            }
+
+            .header h1 {
+                font-size: 1rem;
+            }
+
+            .header .nav-links {
+
+                margin-right: 25px;
+            }
+
+            .form-container {
+                margin: 100px 5px 50px 5px;
+                padding: 15px;
+            }
+
+            .blog-preview {
+                margin: 15px 5px;
+                padding: 15px;
+            }
+
+            .blog-preview h2 {
+                font-size: 20px;
+            }
+
+            .blog-preview p {
+                font-size: 14px;
+            }
+
+            .act-btn {
+                font-size: 14px;
+                padding: 8px 10px;
+            }
+        }
+
+
+        @media screen and (max-width: 300px) {
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: blue;
+                color: white;
+                padding: 10px 0px 10px 20px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000;
+                flex-wrap: wrap;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+
+
+            .form-container {
+                margin: 100px 5px 50px 5px;
+                padding: 15px;
+            }
+
+            .blog-preview {
+                margin: 15px 5px;
+                padding: 15px;
+            }
+
+            .blog-preview h2 {
+                font-size: 20px;
+            }
+
+            .blog-preview p {
+                font-size: 14px;
+            }
+
+            .act-btn {
+                font-size: 14px;
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1 id="welcomeUser">Welcome</h1>
+        <div class="nav-links">
+            <button id="profileBtn" onclick="goToProfile()">Profile</button>
+            <button id="dashboardBtn" onclick="goToDashboard()">Dashboard</button>
+            <button id="logoutBtn" onclick="logout()">Log Out</button>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <label for="title">Title</label>
+        <input type="text" id="title" placeholder="Enter title">
+
+        <label for="description">Description</label>
+        <textarea id="description" placeholder="Enter description"></textarea>
+
+        <label for="image">Image</label>
+        <input id="image" type="file" accept="image/*">
+
+        <button onclick="postBlog()" id="postBlog">Post Blog</button>
+    </div>
+
+    <div id="blogPreview" class="blog-preview" style="display: none;">
+        <img id="previewImage" src="" alt="Blog Image">
+        <h2 id="previewTitle"></h2>
+        <p id="previewDescription"></p>
+        <button onclick="prev()" class="act-btn" id="prevBtn">Previous</button>
+        <button onclick="next()" class="act-btn" id="nextBtn">Next</button>
+        <button onclick="like()" class="act-btn" id="likeBtn">Like</button>
+        <button onclick="reset()" class="act-btn" id="resetBtn">Reset</button>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAnNsvBE78G6y0cbMMvjn5FIni9MmdrpC4",
+            authDomain: "codexplorer-46fb4.firebaseapp.com",
+            databaseURL: "https://codexplorer-46fb4-default-rtdb.firebaseio.com",
+            projectId: "codexplorer-46fb4",
+            storageBucket: "codexplorer-46fb4.appspot.com",
+            messagingSenderId: "680874155974",
+            appId: "1:680874155974:web:3c9214e68ba8ff7c99dcc7"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+        const storage = firebase.storage();
+
+        let currentIndex = 0;
+        let blogs = [];
+
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById("welcomeUser").innerText = `Welcome, ${user.displayName}`;
+                fetchBlogs();
+            } else {
+                window.location.href = "signin.html";
+            }
+        });
+
+        function goToProfile() {
+            const profileBtn = document.getElementById("profileBtn");
+            profileBtn.innerHTML = "Loading...";
+            profileBtn.disabled = true;
+
+            setTimeout(() => {
+                window.location.href = 'profile.html';
+            }, 3000);
+        }
+
+        function goToDashboard() {
+            const dashboardBtn = document.getElementById("dashboardBtn");
+            dashboardBtn.innerHTML = "Loading...";
+            dashboardBtn.disabled = true;
+
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 3000);
+        }
+
+        function logout() {
+            const logoutBtn = document.getElementById("logoutBtn");
+            logoutBtn.innerHTML = "Loading...";
+            logoutBtn.disabled = true;
+
+            setTimeout(() => {
+                firebase.auth().signOut().then(() => {
+                    window.location.href = 'signin.html';
+                });
+            }, 3000);
+        }
+
+        function postBlog() {
+    const title = document.getElementById('title').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const imageInput = document.getElementById('image');
+    const image = imageInput.files[0];
+
+    if (!title || !description || !image) {
+        alert('Please fill all fields and select an image.');
+        return;
+    }
+
+    const storageRef = storage.ref(`blog_images/${Date.now()}_${image.name}`);
+    const uploadTask = storageRef.put(image);
+
+    uploadTask.on(
+        'state_changed',
+        (progress) => {
+            const percent = (progress.bytesTransferred / progress.totalBytes) * 100;
+            console.log(`Upload is ${percent}% done`);
+        },
+        (error) => {
+            console.error('Image upload failed:', error);
+            alert('Image upload failed. Please try again.');
+        },
+        () => {
+            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                const postData = {
+                    title: title,
+                    description: description,
+                    image: downloadURL,
+                    liked: false,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                };
+
+                const newPostKey = database.ref('posts').push().key;
+                const updates = {};
+                updates[`/posts/${newPostKey}`] = postData;
+
+                database.ref().update(updates).then(() => {
+                    alert('Blog post successfully created!');
+                    document.getElementById('title').value = '';
+                    document.getElementById('description').value = '';
+                    document.getElementById('image').value = null;
+                    if (typeof fetchBlogs === 'function') fetchBlogs();
+                }).catch((error) => {
+                    console.error('Error updating database:', error);
+                    alert('Error updating database. Please try again.');
+                });
+            }).catch((error) => {
+                console.error('Error getting download URL:', error);
+                alert('Error getting download URL. Please try again.');
+            });
+        }
+    );
+}
+
+        function fetchBlogs() {
+            database.ref('posts').orderByChild('timestamp').once('value').then((snapshot) => {
+                blogs = [];
+                snapshot.forEach((childSnapshot) => {
+                    const blog = childSnapshot.val();
+                    blog.key = childSnapshot.key;
+                    blogs.push(blog);
+                });
+                if (blogs.length > 0) {
+                    currentIndex = 0;
+                    updatePreview();
+                } else {
+                    document.getElementById('blogPreview').style.display = 'none';
+                }
+            });
+        }
+
+        function updatePreview() {
+            if (blogs.length > 0) {
+                const currentBlog = blogs[currentIndex];
+                document.getElementById('previewImage').src = currentBlog.image;
+                document.getElementById('previewTitle').textContent = currentBlog.title;
+                document.getElementById('previewDescription').textContent = currentBlog.description;
+                document.getElementById('likeBtn').textContent = currentBlog.liked ? 'Unlike' : 'Like';
+                document.getElementById('blogPreview').style.display = 'block';
+            }
+        }
+
+        function prev() {
+            if (blogs.length > 0) {
+                currentIndex = (currentIndex - 1 + blogs.length) % blogs.length;
+                updatePreview();
+            }
+        }
+
+        function next() {
+            if (blogs.length > 0) {
+                currentIndex = (currentIndex + 1) % blogs.length;
+                updatePreview();
+            }
+        }
+
+        function like() {
+            if (blogs.length > 0) {
+                blogs[currentIndex].liked = !blogs[currentIndex].liked;
+                const updates = {};
+                updates[`/posts/${blogs[currentIndex].key}/liked`] = blogs[currentIndex].liked;
+                database.ref().update(updates).then(() => {
+                    updatePreview();
+                });
+            }
+        }
+
+        function reset() {
+            if (confirm('Are you sure you want to reset all blogs?')) {
+                database.ref('posts').remove().then(() => {
+                    blogs = [];
+                    currentIndex = 0;
+                    updatePreview();
+                    alert('All blogs have been reset.');
+                });
+            }
+        }
+    </script>
+</body>
+
+
+
+</html>

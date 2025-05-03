@@ -75,10 +75,10 @@
         }
 
         .profile-container img {
-            width: 100px;
-            height: 100px;
+            width: 250px;
+            height: 250px;
             border-radius: 50%;
-            margin: 100px auto 50px auto;
+            margin: 0px auto 0px auto;
         }
 
         .profile-container h3 {
@@ -125,7 +125,8 @@
             cursor: pointer;
             margin: 5px;
         }
-        .update input[type="text"]{
+
+        .update input[type="text"] {
             width: 50%;
             padding: 10px;
             margin-bottom: 15px;
@@ -336,6 +337,7 @@
         <h1 id="welcomeUser"></h1>
         <div class="nav-links">
             <button id="dashboardBtn" onclick="goToDashboard()">Dashboard</button>
+            <button id="blogBtn" onclick="goToBlog()">Blog</button>
             <button id="logoutBtn" onclick="logout()">Log Out</button>
         </div>
     </div>
@@ -382,6 +384,18 @@
             }, 3000);
         }
 
+        function goToBlog() {
+        blogBtn.innerHTML = "Loading...";
+        blogBtn.disabled = true;
+
+        setTimeout(() => {
+            alert('Redirecting to blog...');
+            window.location.href = 'postblog.html';
+            blogBtn.innerHTML = "Blog";
+            blogBtn.disabled = false;
+        }, 3000);
+    }
+
         function logout() {
             auth.signOut().then(() => {
                 alert("Logging out...");
@@ -403,42 +417,42 @@
                 }
             });
         }
+        function uploadImage(event) {
+            let file = document.getElementById("profileImage").files[0];
 
-        // function uploadImage(event) {
-        //     const file = event.target.files[0];
-        //     if (!file) {
-        //         alert("No file selected.");
-        //         return;
-        //     }
+            if (!file) {
+                alert("Please select an image file!");
+                return;
+            }
 
-        //     const user = auth.currentUser;
-        //     const storageRef = storage.ref();
-        //     const profilePicRef = storageRef.child(`profile_pictures/${user.uid}/${file.name}`);
+            console.log(file);
 
-        //     const uploadTask = profilePicRef.put(file);
+            // Create a URL for the uploaded file
+            let myUrl = URL.createObjectURL(file);
+            console.log(myUrl);
 
-        //     uploadTask.on('state_changed',
-        //         snapshot => {
-        //             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        //             console.log(`Upload is ${progress}% done`);
-        //         },
-        //         error => {
-        //             console.error("Error uploading file: ", error);
-        //             alert("Failed to upload image.");
-        //         },
-        //         () => {
-        //             uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
-        //                 user.updateProfile({ photoURL: downloadURL }).then(() => {
-        //                     document.getElementById("profilePic").src = downloadURL;
-        //                     alert("Profile picture updated successfully.");
-        //                 }).catch(error => {
-        //                     console.error("Error updating profile: ", error);
-        //                     alert("Failed to update profile picture.");
-        //                 });
-        //             });
-        //         }
-        //     );
-        // }
+            const user = auth.currentUser;
+            if (!user) {
+                alert("No user is currently signed in!");
+                return;
+            }
+
+            user.updateProfile({
+                photoURL: myUrl 
+            }).then(() => {
+               
+                let img = document.getElementById("profilePic");
+                if (!img) {
+                    alert("Profile picture element not found!");
+                    return;
+                }
+
+                img.src = myUrl;
+                alert("Profile picture updated successfully");
+            }).catch((error) => {
+                alert("Error updating profile picture: " + error.message);
+            });
+        }
 
         function updateUsername() {
             const newUsername = document.getElementById("input1").value.trim();
